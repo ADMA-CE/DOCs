@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project3EVAL - Modernización Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .step-card:hover { border-color: #3b82f6; transform: translateY(-2px); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-slate-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-800">🚀 Project3EVAL</h1>
+                    <p class="text-slate-500 mt-1">Modernización, CI/CD y Observabilidad Cloud (Serverless)</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 min-w-[220px]">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="font-semibold text-blue-700">Presupuesto AWS Academy</span>
+                        <span id="budget-display" class="font-bold text-blue-800">100$ / 100$</span>
+                    </div>
+                    <div class="w-full bg-blue-200 rounded-full h-2">
+                        <div id="budget-bar" class="bg-blue-600 h-2 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navegación por pestañas (5 Semanas) -->
+        <nav class="flex space-x-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <button onclick="openTab(event, 'week1')" class="tab-btn px-5 py-3 rounded-xl font-medium bg-blue-600 text-white border border-transparent transition-all">S1: Auditoría (SA6)</button>
+            <button onclick="openTab(event, 'week2')" class="tab-btn px-5 py-3 rounded-xl font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">S2: Serverless (SAM)</button>
+            <button onclick="openTab(event, 'week3')" class="tab-btn px-5 py-3 rounded-xl font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">S3: CI/CD (SA4)</button>
+            <button onclick="openTab(event, 'week4')" class="tab-btn px-5 py-3 rounded-xl font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">S4: Observabilidad (SA5)</button>
+            <button onclick="openTab(event, 'week5')" class="tab-btn px-5 py-3 rounded-xl font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">S5: Demo & Defensa</button>
+        </nav>
+
+        <!-- Semana 1: Auditoría y Plan de Migración -->
+        <div id="week1" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-amber-600">
+                        <span class="bg-amber-100 w-8 h-8 rounded-full flex items-center justify-center text-sm">SA6</span>
+                        Semana 1: Informe de Evaluación
+                    </h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-lg border border-transparent transition-all">
+                            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-blue-600" onchange="updateProgress()">
+                            <div>
+                                <p class="font-semibold text-slate-700">Clasificación 7 'Rs'</p>
+                                <p class="text-sm text-slate-500">Analizar la infraestructura ECS/Fargate de la 2ª Eval y justificar qué piezas van a Serverless.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-lg border border-transparent transition-all">
+                            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-blue-600" onchange="updateProgress()">
+                            <div>
+                                <p class="font-semibold text-slate-700">Justificación Tecnológica (FinOps)</p>
+                                <p class="text-sm text-slate-500">Comparar costes proyectados: ¿Por qué AWS SAM/Lambda en lugar de contenedores fijos?</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-lg border border-transparent transition-all">
+                            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-blue-600" onchange="updateProgress()">
+                            <div>
+                                <p class="font-semibold text-slate-700">Plan de Cutover & Rollback</p>
+                                <p class="text-sm text-slate-500">Definir cómo haremos el paso de tráfico y qué hacer si la migración falla.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="font-bold mb-4 flex items-center gap-2">
+                        <span>📖</span> Referencia 7 'Rs'
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="p-2 bg-indigo-800 rounded-lg border border-indigo-700">
+                            <strong>Refactor:</strong> Cambiar código para SAM/Lambda (Nativo Cloud).
+                        </div>
+                        <div class="p-2 bg-indigo-800 rounded-lg border border-indigo-700">
+                            <strong>Replatform:</strong> Pasar de BD auto-gestionada a Amazon RDS.
+                        </div>
+                        <div class="p-2 bg-indigo-800 rounded-lg border border-indigo-700">
+                            <strong>Retain/Retire:</strong> Decidir qué componentes sobran o se quedan igual.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semana 2: Desarrollo Serverless -->
+        <div id="week2" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-blue-600">
+                    <span>🛠️</span> Semana 2: Aplicación Serverless
+                </h2>
+                
+                <!-- Diagrama de Arquitectura con ruta actualizada -->
+                <div class="mb-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="text-lg">🖼️</span> Ejemplo de Arquitectura Objetivo (SAM + API Gateway + Lambda)
+                    </h3>
+                    <div class="flex justify-center">
+                        <img src="./img/Proyecto.png" alt="Diagrama de Arquitectura Serverless" class="rounded-lg shadow-md max-w-full border border-slate-300">
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2 text-center italic">Referencia visual: Orquestación de Lambdas, API Gateway y Pipeline de despliegue.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <p class="text-slate-600">Transformamos la lógica de negocio a funciones Lambda y configuramos el modelo SAM siguiendo el diagrama superior.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Crear Plantilla AWS SAM (template.yaml)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Desarrollo de Funciones Lambda (Python/Node)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Testing Local con SAM CLI</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center">
+                        <div class="bg-white p-4 shadow-sm rounded-lg text-xs font-mono text-slate-700 w-full overflow-hidden">
+                            <span class="text-blue-600">AWSTemplateFormatVersion:</span> '2010-09-09'<br>
+                            <span class="text-blue-600">Transform:</span> AWS::Serverless-2016-10-31<br>
+                            <span class="text-emerald-600">Resources:</span><br>
+                            &nbsp;&nbsp;MyLambdaFunction:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Type: AWS::Serverless::Function
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2">Plantilla base para recursos SAM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semana 3: CI/CD y DevSecOps -->
+        <div id="week3" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-emerald-600">
+                    <span class="bg-emerald-100 w-8 h-8 rounded-full flex items-center justify-center text-sm">SA4</span>
+                    Semana 3: Automatización Segura
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 space-y-4">
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                                <input type="checkbox" class="mt-1 w-5 h-5" onchange="updateProgress()">
+                                <div>
+                                    <p class="font-semibold">Pipeline YAML (GitHub Actions / CodePipeline)</p>
+                                    <p class="text-sm text-slate-500">Configurar etapas de Build, Test y Deploy Automático.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                                <input type="checkbox" class="mt-1 w-5 h-5" onchange="updateProgress()">
+                                <div>
+                                    <p class="font-semibold">Security Scan (DevSecOps)</p>
+                                    <p class="text-sm text-slate-500">Integrar escaneo de secretos y dependencias (ej. Snyk o AWS Secrets Manager).</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                                <input type="checkbox" class="mt-1 w-5 h-5" onchange="updateProgress()">
+                                <div>
+                                    <p class="font-semibold">Pruebas Unitarias en el Pipeline</p>
+                                    <p class="text-sm text-slate-500">El despliegue debe fallar si las pruebas de código no pasan.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                            <h4 class="font-bold text-emerald-800 text-sm">Estrategia sugerida</h4>
+                            <p class="text-xs text-emerald-600 mt-1 italic">"Despliega siempre en un entorno de Staging antes que en Producción."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semana 4: Observabilidad -->
+        <div id="week4" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-red-600">
+                    <span class="bg-red-100 w-8 h-8 rounded-full flex items-center justify-center text-sm">SA5</span>
+                    Semana 4: Capa de Telemetría
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Dashboard de CloudWatch (Métricas 5xx y Latencia)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Centralización de Logs (Log Groups)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <input type="checkbox" class="w-5 h-5" onchange="updateProgress()">
+                                <span class="text-slate-700">Alertas SNS (Email/Telegram si Errores > 1%)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 p-6 rounded-xl flex flex-col items-center justify-center">
+                        <div class="w-full h-24 flex items-end gap-1 px-4">
+                            <div class="bg-emerald-500 w-full h-1/2 rounded-t"></div>
+                            <div class="bg-emerald-500 w-full h-2/3 rounded-t"></div>
+                            <div class="bg-red-500 w-full h-full rounded-t animate-pulse"></div>
+                            <div class="bg-emerald-500 w-full h-1/3 rounded-t"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 uppercase tracking-widest font-bold">Métricas en Tiempo Real</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semana 5: Demo y Defensa -->
+        <div id="week5" class="tab-content space-y-6">
+            <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-xl text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 text-8xl">🏆</div>
+                <h2 class="text-3xl font-bold mb-4">Semana 5: El Gran Final</h2>
+                <p class="text-slate-400 mb-8 max-w-2xl mx-auto">Pruebas finales de carga, ajuste de costes y defensa ante el comité simulado.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 step-card transition-all">
+                        <div class="text-2xl mb-2">⚖️</div>
+                        <h5 class="font-bold">Ajustes FinOps</h5>
+                        <p class="text-xs text-slate-500 mt-2">Revisión final del consumo de créditos AWS Academy.</p>
+                        <input type="checkbox" class="mt-4" onchange="updateProgress()">
+                    </div>
+                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 step-card transition-all">
+                        <div class="text-2xl mb-2">💥</div>
+                        <h5 class="font-bold">Demo de Fallo</h5>
+                        <p class="text-xs text-slate-500 mt-2">Inyectar un error y mostrar cómo la observabilidad lo detecta.</p>
+                        <input type="checkbox" class="mt-4" onchange="updateProgress()">
+                    </div>
+                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 step-card transition-all">
+                        <div class="text-2xl mb-2">🗣️</div>
+                        <h5 class="font-bold">Presentación</h5>
+                        <p class="text-xs text-slate-500 mt-2">Defensa de las decisiones tomadas ante el comité.</p>
+                        <input type="checkbox" class="mt-4" onchange="updateProgress()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer de Progreso Global -->
+        <footer class="mt-12 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div id="total-progress-circle" class="relative w-16 h-16 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="6" fill="transparent" class="text-slate-100"></circle>
+                        <circle id="progress-svg-circle" cx="32" cy="32" r="28" stroke="currentColor" stroke-width="6" fill="transparent" stroke-dasharray="175.9" stroke-dashoffset="175.9" class="text-blue-600 transition-all duration-700"></circle>
+                    </svg>
+                    <span id="progress-text" class="absolute text-sm font-bold text-slate-800">0%</span>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-800">Progreso Total del Proyecto</h4>
+                    <p class="text-sm text-slate-500">5 semanas · 15 hitos clave</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="resetData()" class="px-4 py-2 text-sm text-slate-400 hover:text-red-500 transition-colors">Reiniciar</button>
+                <div class="bg-slate-100 px-4 py-2 rounded-lg text-slate-700 text-sm font-mono border border-slate-200">
+                    ID: CLOUD-3EVAL-PRO
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("bg-blue-600", "text-white");
+                buttons[i].classList.add("bg-white", "text-slate-600", "border-slate-200");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.remove("bg-white", "text-slate-600", "border-slate-200");
+            evt.currentTarget.classList.add("bg-blue-600", "text-white");
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const percentage = Math.round((checked.length / checkboxes.length) * 100);
+            
+            const circle = document.getElementById('progress-svg-circle');
+            const circumference = 2 * Math.PI * 28;
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            document.getElementById('progress-text').innerText = percentage + '%';
+
+            // Simulación de consumo de presupuesto según hitos completados
+            const budgetUsed = checked.length * 6.6; 
+            const budgetRem = Math.max(0, 100 - budgetUsed);
+            
+            document.getElementById('budget-display').innerText = Math.round(budgetRem) + '$ / 100$';
+            document.getElementById('budget-bar').style.width = budgetRem + '%';
+            
+            if(budgetRem < 20) {
+                document.getElementById('budget-bar').classList.add('bg-red-500');
+                document.getElementById('budget-bar').classList.remove('bg-blue-600');
+            } else {
+                document.getElementById('budget-bar').classList.add('bg-blue-600');
+                document.getElementById('budget-bar').classList.remove('bg-red-500');
+            }
+        }
+
+        function resetData() {
+            if(confirm("¿Seguro que quieres borrar el progreso del proyecto?")) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                updateProgress();
+            }
+        }
+
+        window.onload = updateProgress;
+    </script>
+</body>
+</html>
